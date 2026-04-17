@@ -45,13 +45,6 @@ export default function AppsPage() {
       }
 
       setError(err.message)
-      // MOCK FALLBACK FOR DEV
-      if (apps.length === 0 && !err.message.includes('sesión')) {
-        setApps([
-          { id: '1', name: 'Flopy Project Alpha', ownerId: '1', createdAt: new Date().toISOString() },
-          { id: '2', name: 'Mobile App Beta', ownerId: '1', createdAt: new Date().toISOString() },
-        ])
-      }
     } finally {
       setIsLoading(false)
     }
@@ -80,16 +73,6 @@ export default function AppsPage() {
       }
       
       setError(err.message)
-      if (err.message.includes('fetch') || err.message.includes('API Error')) {
-         const mockNewApp = { 
-           id: `mock_${Math.random().toString(36).substr(2, 9)}`, 
-           name: newAppName, 
-           ownerId: '1', 
-           createdAt: new Date().toISOString() 
-         }
-         setApps(prev => [mockNewApp, ...prev])
-         setNewAppName('')
-      }
     } finally {
       setIsCreating(false)
     }

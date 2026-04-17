@@ -68,7 +68,7 @@ export default function MetricsPage() {
             </div>
          </div>
 
-         {/* Hero Stats */}
+         {/* Core Metrics Grid */}
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {mainStats.map((stat, i) => (
                <div key={i} className={`${stat.color} border-4 border-black p-6 shadow-block relative overflow-hidden group`}>
@@ -84,7 +84,9 @@ export default function MetricsPage() {
                      </div>
                      <div>
                         <p className="text-[9px] font-black uppercase opacity-60 m-0">{stat.label}</p>
-                        <p className="text-3xl font-black mt-1 leading-none">{stat.value}</p>
+                        <p className="text-3xl font-black mt-1 leading-none">
+                           {isLoading ? '...' : stat.value}
+                        </p>
                      </div>
                   </div>
                   <div className="absolute -right-4 -bottom-4 w-24 h-24 opacity-5 group-hover:rotate-12 transition-transform">
@@ -95,103 +97,46 @@ export default function MetricsPage() {
          </div>
 
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Adoption Chart Mock */}
+            {/* Version Adoption (Server Data) */}
             <div className="lg:col-span-2 bg-white border-4 border-black p-8 shadow-block">
                <div className="flex items-center justify-between mb-8">
                   <h3 className="text-sm font-black uppercase italic flex items-center gap-2">
                      <TrendingUp className="w-5 h-5 text-primary" />
-                     Adopción de Versiones (Últimos 7 días)
+                     Adopción del Ecosistema
                   </h3>
-                  <div className="flex gap-2 text-[8px] font-black uppercase">
-                     <span className="flex items-center gap-1"><div className="w-2 h-2 bg-primary" /> v2.4.0</span>
-                     <span className="flex items-center gap-1"><div className="w-2 h-2 bg-secondary" /> v2.3.1</span>
-                  </div>
                </div>
 
-               <div className="h-64 flex items-end gap-4 overflow-hidden">
-                  {[40, 65, 45, 90, 75, 80, 95].map((h, i) => (
-                     <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
-                        <div className="w-full relative bg-muted/30 border-t-2 border-black/10 h-full flex items-end">
-                           <div
-                              className="w-full bg-primary border-2 border-black transition-all hover:brightness-110 shadow-block group-hover:shadow-none"
-                              style={{ height: `${h}%` }}
-                           />
-                        </div>
-                        <span className="text-[8px] font-bold text-muted-foreground uppercase italic px-1">Día {i + 1}</span>
-                     </div>
-                  ))}
+               <div className="h-64 flex items-center justify-center border-4 border-dashed border-black/10 text-muted-foreground italic">
+                  <div className="text-center">
+                     <BarChart3 className="w-12 h-12 mb-4 mx-auto opacity-20" />
+                     <p className="text-[10px] font-black uppercase">Telemetría de adopción en tiempo real pendiente de sincronización</p>
+                  </div>
                </div>
             </div>
 
-            {/* OS Distribution */}
+            {/* Platform Versions */}
             <div className="bg-white border-4 border-black p-8 shadow-block">
                <h3 className="text-sm font-black uppercase italic mb-8 flex items-center gap-2">
                   <Smartphone className="w-5 h-5 text-primary" />
-                  Plataformas (Activas)
+                  Versiones del Binario
                </h3>
-               <div className="space-y-8">
-                  {[
-                    { label: 'iOS Devices', value: 68, color: 'bg-black' },
-                    { label: 'Android Devices', value: 32, color: 'bg-primary' },
-                  ].map((p, i) => (
-                    <div key={i} className="space-y-2">
-                       <div className="flex justify-between text-[10px] font-black uppercase">
-                          <span>{p.label}</span>
-                          <span>{p.value}%</span>
-                       </div>
-                       <div className="w-full h-6 bg-[#f0f0f0] border-2 border-black p-0.5 overflow-hidden shadow-[2px_2px_0_0_rgba(0,0,0,1)]">
-                          <div 
-                            className={`h-full ${p.color} border-r-2 border-black transition-all duration-1000`}
-                            style={{ width: `${p.value}%` }} 
-                          />
-                       </div>
-                    </div>
-                  ))}
-               </div>
-
-               <div className="mt-12 pt-8 border-t-2 border-dashed border-black/10">
-                  <h4 className="text-[10px] font-black uppercase opacity-40 mb-4">Versión del Binario</h4>
-                  <div className="space-y-3">
-                     {[
-                        { v: 'v1.2.0', p: 85 },
-                        { v: 'v1.1.8', p: 12 },
-                        { v: 'v1.1.0', p: 3 },
-                     ].map((item, idx) => (
-                        <div key={idx} className="flex items-center justify-between text-[10px] font-black uppercase">
-                           <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-black" /> {item.v}</span>
-                           <span className="text-primary">{item.p}%</span>
-                        </div>
-                     ))}
+               
+               <div className="space-y-4">
+                  <div className="p-4 bg-muted border-2 border-dashed border-black/20 text-center">
+                     <p className="text-[9px] font-black uppercase opacity-40 italic">Esperando datos de dispositivos...</p>
                   </div>
                </div>
             </div>
          </div>
 
-         {/* Global Distribution Map Mock */}
-         <div className="bg-black text-white border-4 border-black p-10 shadow-block relative overflow-hidden group">
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-               <div className="space-y-4">
-                  <h3 className="text-2xl font-black uppercase italic tracking-tighter">Alcance Global de Flopy</h3>
-                  <p className="text-xs font-bold text-white/60 uppercase leading-relaxed max-w-sm">
-                     Tus aplicaciones han desplegado <span className="text-primary">82.3 TB</span> de actualizaciones en <span className="text-secondary">42 países</span> durante este mes.
-                  </p>
-                  <button className="px-6 py-3 border-2 border-primary text-primary font-black uppercase text-[10px] tracking-widest hover:bg-primary hover:text-white transition-all">
-                     Ver Mapa de Calor
-                  </button>
-               </div>
-               <div className="bg-primary/20 p-8 border-4 border-primary border-dashed group-hover:bg-primary/30 transition-colors">
-                  <div className="flex items-center gap-6">
-                     <Globe className="w-16 h-16 animate-spin-slow" />
-                     <div>
-                        <p className="text-4xl font-black italic">42</p>
-                        <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Regiones Activas</p>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            {/* Background Decor */}
-            <div className="absolute top-0 right-0 w-full h-full opacity-5 pointer-events-none select-none overflow-hidden">
-               <div className="text-[200px] font-black -rotate-12 translate-x-1/4 translate-y-1/4">METRICS</div>
+         {/* Info Banner */}
+         <div className="bg-black text-white border-4 border-black p-10 shadow-block relative overflow-hidden">
+            <div className="relative z-10">
+               <h3 className="text-2xl font-black uppercase italic tracking-tighter mb-4">Servidor de Métricas Conectado</h3>
+               <p className="text-xs font-bold text-white/60 uppercase leading-relaxed max-w-xl">
+                  Flopy está recolectando datos de <span className="text-primary">{metrics?.totalApps || 0} aplicaciones</span>. 
+                  Las estadísticas de latencia y éxito de OTA se calculan basándose en los reportes de estado enviados por el SDK desde los dispositivos finales.
+               </p>
             </div>
          </div>
       </div>

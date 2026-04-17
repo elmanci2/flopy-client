@@ -47,13 +47,7 @@ export default function ReleasesPage() {
         setReleases(allReleases.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()))
       } catch (err: any) {
         console.error('Fetch Releases Error:', err)
-        // Mock fallback deleted for brevity in real release, but showing some mock data here for dev
-        if (releases.length === 0) {
-           setReleases([
-             { id: 'r1', version: '1.0.2', notes: 'Initial rollout', appId: 'app1', channelId: 'c1', url: '#', isMandatory: false, createdAt: new Date().toISOString() },
-             { id: 'r2', version: '2.0.1', notes: 'Security patches', appId: 'app2', channelId: 'c2', url: '#', isMandatory: true, createdAt: new Date().toISOString() }
-           ])
-        }
+        // No mock data - only real server data
       } finally {
         setIsLoading(false)
       }

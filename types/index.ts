@@ -25,8 +25,10 @@ export interface Release {
   version: string
   notes?: string
   url: string
+  hash: string
   appId: string
   channelId: string
   isMandatory: boolean
   createdAt: string
+  targetBinaryVersion?: string
 }

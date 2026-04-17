@@ -59,18 +59,6 @@ export default function AppDetailPage() {
         window.location.href = '/login'
         return
       }
-
-      // MOCK DATA
-      if (!app) {
-        setApp({ id: id as string, name: 'Proyecto de Prueba', ownerId: 'mock', createdAt: new Date().toISOString() })
-        setKeys([
-          { id: 'k1', channel: 'Production', key: 'pk_prod_82374928374', appId: id as string, createdAt: new Date().toISOString() },
-          { id: 'k2', channel: 'Staging', key: 'pk_stg_1122334455', appId: id as string, createdAt: new Date().toISOString() }
-        ])
-        setReleases([
-          { id: 'r1', version: '2.4.0', notes: 'Mejoras en el rendimiento de la cámara y corrección de bugs en login.', appId: id as string, channelId: 'k1', url: '', isMandatory: true, createdAt: new Date().toISOString() }
-        ])
-      }
     } finally {
       setIsLoading(false)
     }
@@ -97,16 +85,7 @@ export default function AppDetailPage() {
         return
       }
 
-      // Mock add
-      const mockKey = {
-        id: Math.random().toString(),
-        channel: newChannel,
-        key: `pk_${newChannel.toLowerCase()}_${Math.random().toString(36).substr(2, 10)}`,
-        appId: id as string,
-        createdAt: new Date().toISOString()
-      }
-      setKeys(prev => [...prev, mockKey])
-      setNewChannel('')
+      alert('Error: ' + err.message)
     }
   }
 
