@@ -387,7 +387,7 @@ export default function AppDetailPage() {
             </div>
 
             <div className="flex-1 overflow-y-auto p-8 space-y-6">
-              {releases.map((rel, idx) => (
+              {releases.map((rel: any, idx: any) => (
                 <div key={rel.id} className={cn(
                   "bg-white border-4 border-black p-6 shadow-block group transition-all",
                   idx === 0 && "ring-4 ring-primary ring-offset-2"
