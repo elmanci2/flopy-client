@@ -77,21 +77,39 @@ export default function AppDetailPage() {
     try {
       await flopyApi.post(`/apps/${id}/deployments`, { channel: newChannel }, user?.token)
       setNewChannel('')
+      setError(null)
       fetchData()
     } catch (err: any) {
       console.error('Create Key Error:', err)
       if (err.status === 401) {
-        alert('Sesión expirada')
+        setError('Sesión expirada')
         return
       }
 
-      alert('Error: ' + err.message)
+      setError(err.message)
     }
   }
 
 
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text)
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(text).catch(e => console.error(e))
+    } else {
+      const textArea = document.createElement("textarea")
+      textArea.value = text
+      textArea.style.position = "fixed"
+      textArea.style.left = "-999999px"
+      textArea.style.top = "-999999px"
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      try {
+        document.execCommand('copy')
+      } catch (err) {
+        console.error('Fallback copy fail', err)
+      }
+      textArea.remove()
+    }
     setCopiedKey(text)
     setTimeout(() => setCopiedKey(null), 2000)
   }
@@ -132,6 +150,16 @@ export default function AppDetailPage() {
         <ChevronRight className="w-3 h-3" />
         <span className="text-primary">{app?.name}</span>
       </nav>
+
+      {error && (
+        <div className="bg-destructive/10 border-4 border-destructive p-4 text-destructive text-[11px] font-black uppercase flex items-center justify-between shadow-[4px_4px_0_0_rgba(255,0,0,0.2)]">
+          <div className="flex items-center gap-3">
+            <span className="bg-destructive text-white px-2 py-0.5 border-2 border-black">ERROR</span>
+            <span>{error}</span>
+          </div>
+          <button onClick={() => setError(null)} className="hover:text-black transition-colors font-black text-xs">X</button>
+        </div>
+      )}
 
       {/* Hero Header */}
       <section className="bg-white border-4 border-black p-8 shadow-block relative overflow-hidden">
@@ -192,7 +220,7 @@ export default function AppDetailPage() {
                 <div key={k.id} className="group relative bg-[#f9f9f9] border-3 border-black p-5 transition-all hover:translate-x-1">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="space-y-1">
-                      <span className="bg-primary text-white text-[9px] font-black uppercase px-2 py-0.5 border-2 border-black">
+                      <span className="bg-primary text-white text-[11px] font-black px-2 py-0.5 border-2 border-black">
                         {k.channel}
                       </span>
                       <div className="flex items-center gap-2 mt-2">
@@ -202,12 +230,19 @@ export default function AppDetailPage() {
                         </code>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <button
-                        onClick={() => copyToClipboard(k.key)}
+                        onClick={() => copyToClipboard(k.channel)}
                         className="flex items-center gap-2 px-3 py-2 bg-white border-2 border-black font-black uppercase text-[9px] tracking-widest shadow-[2px_2px_0_0_rgba(0,0,0,1)] active:shadow-none active:translate-y-[2px] hover:bg-muted transition-all"
                       >
-                        {copiedKey === k.key ? <Check className="w-3 h-3 text-green-600" /> : <Copy className="w-3 h-3" />}
+                        {copiedKey === k.channel ? <Check className="w-3 h-3 text-green-600" /> : <Copy className="w-3 h-3" />}
+                        {copiedKey === k.channel ? 'Copiado!' : 'Copiar Canal'}
+                      </button>
+                      <button
+                        onClick={() => copyToClipboard(k.key)}
+                        className="flex items-center gap-2 px-3 py-2 bg-black text-white border-2 border-black font-black uppercase text-[9px] tracking-widest shadow-[2px_2px_0_0_rgba(0,0,0,1)] active:shadow-none active:translate-y-[2px] transition-all hover:bg-gray-800"
+                      >
+                        {copiedKey === k.key ? <Check className="w-3 h-3 text-green-400" /> : <Copy className="w-3 h-3" />}
                         {copiedKey === k.key ? 'Copiado!' : 'Copiar Key'}
                       </button>
                     </div>
